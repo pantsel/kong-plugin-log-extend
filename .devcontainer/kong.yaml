@@ -1,0 +1,65 @@
+_format_version: "3.0"
+
+plugins:
+  - name: file-log
+    enabled: true
+    config:
+      path: /dev/stdout
+  - name: log-extend
+    enabled: true
+    config:
+      request_body: true
+      request_body_pre: true
+      response_body: true
+      response_body_pre: true
+      custom_fields_by_lua:
+        request.body.foo: return "[REDACTED]"
+        request.body.organizations.1.departments.2.employees.1.email: return "***"
+        request.body.teams.*.members.*.email: return "***"
+        request.body_pre.users.1.email: return "***"
+        request.body.users.*.name: return "***"
+        request.body.some.non.existant.field: return "***"
+        request.body.some.non.existant.field2.*: return "***"
+        response.body.request.body.teams.1.members.1.email: return "***"
+        source: return "kong"
+
+services:
+  - name: echo
+    url: http://echo:80
+    routes:
+      - name: echo
+        plugins:
+        - name: request-transformer
+          config:
+            add:
+              body:
+                - foo:bar
+        - name: response-transformer
+          config:
+            add:
+              json:
+                - foo_response:bar_response
+        paths:
+          - ~/echo$
+      
+      - name: echo2
+        paths:
+          - ~/echo2$
+  
+  - name: httpbin
+    url: https://httpbin.org
+    routes:
+      - name: httpbin
+        plugins:
+        - name: request-transformer
+          config:
+            add:
+              body:
+                - foo:bar
+        - name: response-transformer
+          config:
+            add:
+              json:
+                - foo_response:bar_response
+        paths:
+          - ~/httpbin

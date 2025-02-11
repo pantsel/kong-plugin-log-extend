@@ -1,0 +1,31 @@
+name: log-extend
+services:
+  kong:
+    image: kong/kong-gateway:3.9.0.1-ubuntu
+    container_name: kong
+    environment:
+      KONG_DATABASE: "off"
+      KONG_LOG_LEVEL: "info"
+      KONG_NGINX_WORKER_PROCESSES: 1
+      KONG_PLUGINS: bundled,log-extend
+      KONG_DECLARATIVE_CONFIG: /kong.yaml
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+    volumes:
+      - ../..:/workspaces:cached
+      - ./kong.yaml:/kong.yaml
+    networks:
+      - kong
+    labels:
+      - dev.orbstack.domains=kong.local
+
+  echo:
+    image: ealen/echo-server
+    container_name: echo
+    networks:
+      - kong
+
+networks:
+  kong:
+    driver: bridge
