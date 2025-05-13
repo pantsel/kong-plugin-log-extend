@@ -14,13 +14,14 @@ plugins:
       response_body_pre: true
       custom_fields_by_lua:
         request.body.foo: return "[REDACTED]"
+        request.body.auth.username: return "***"
         request.body.organizations.1.departments.2.employees.1.email: return "***"
         request.body.teams.*.members.*.email: return "***"
         request.body_pre.users.1.email: return "***"
         request.body.users.*.name: return "***"
         request.body.some.non.existant.field: return "***"
         request.body.some.non.existant.field2.*: return "***"
-        response.body.request.body.teams.1.members.1.email: return "***"
+        request.body.teams.1.members.1.email: return "***"
         source: return "kong"
 
 services:

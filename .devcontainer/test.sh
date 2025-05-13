@@ -1,4 +1,5 @@
 http POST localhost:8000/echo \
+    auth:='{"username": "admin", "password": "admin"}' \
     users:='[
         {"id": 1, "name": "bob", "email": "bob@example.com"},
         {"id": 2, "name": "alice", "email": "alice@example.com"},

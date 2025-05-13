@@ -1,7 +1,7 @@
 name: log-extend
 services:
   kong:
-    image: kong/kong-gateway:3.9.0.1-ubuntu
+    image: kong/kong-gateway:3.10.0.0-ubuntu
     container_name: kong
     environment:
       KONG_DATABASE: "off"
